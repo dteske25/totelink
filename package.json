@@ -1,0 +1,46 @@
+{
+  "name": "totelink",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "nitro dev",
+    "build": "tsc -b && vite build",
+    "build:server": "nitro build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "preview-server": "node .output/server/index.mjs",
+    "prepare": "nitro prepare"
+  },
+  "dependencies": {
+    "@auth0/auth0-react": "^2.3.0",
+    "@tanstack/react-router": "^1.114.29",
+    "clsx": "^2.1.1",
+    "daisyui": "^5.0.9",
+    "lucide-react": "^0.485.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.0.17",
+    "usehooks-ts": "^3.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@tailwindcss/vite": "^4.0.17",
+    "@tanstack/react-router-devtools": "^1.114.29",
+    "@tanstack/router-plugin": "^1.114.30",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.23.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "nitropack": "^2.11.8",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "typescript": "~5.8.2",
+    "typescript-eslint": "^8.28.0",
+    "vite": "^6.2.3"
+  }
+}
