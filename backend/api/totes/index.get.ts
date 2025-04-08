@@ -1,5 +1,7 @@
+import { useToteDatabase } from "~/utils/createDatabase";
+
 export default defineEventHandler(async () => {
-  const db = useDatabase();
+  const db = useToteDatabase();
 
   const { rows } = await db.sql`SELECT * FROM totes`;
 
