@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Swap } from "./Swap";

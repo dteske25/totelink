@@ -1,12 +1,10 @@
 import { Package } from "lucide-react";
 import { ThemePicker } from "./ThemePicker";
 import { Link } from "./Link";
-import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 
 export function Navbar() {
-  const { isAuthenticated, user } = useAuth0();
   return (
     <div className="navbar bg-base-300">
       <div className="navbar-start">
@@ -39,11 +37,8 @@ export function Navbar() {
               <Link to="/scan">Scan</Link>
             </li>
             <li>
-              {isAuthenticated ? (
-                <LogoutButton className="btn btn-ghost" />
-              ) : (
-                <LoginButton className="btn btn-ghost" />
-              )}
+              <LogoutButton />
+              <LoginButton />
             </li>
           </ul>
         </div>
@@ -63,21 +58,7 @@ export function Navbar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <div className="hidden md:flex">
-          {!isAuthenticated && <LoginButton className="btn btn-primary" />}
-          {isAuthenticated && (
-            <div className="dropdown">
-              <button role="button" className="btn btn-ghost">
-                {user?.name ?? "Me"}
-              </button>
-              <ul className="dropdown-content menu w-30 rounded-box bg-base-300 p-2 shadow-sm">
-                <li>
-                  <LogoutButton className="btn btn-ghost" />
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+        <div className="hidden md:flex"></div>
         <ThemePicker />
       </div>
     </div>
