@@ -9,10 +9,15 @@ const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
+  context: {},
 });
+
+function App() {
+  return <RouterProvider router={router} context={{}} />;
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <App />
   </StrictMode>,
 );

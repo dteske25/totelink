@@ -1,8 +1,7 @@
 import { Package } from "lucide-react";
 import { ThemePicker } from "./ThemePicker";
 import { Link } from "./Link";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
+import AuthButton from "./AuthButton";
 
 export function Navbar() {
   return (
@@ -37,8 +36,7 @@ export function Navbar() {
               <Link to="/scan">Scan</Link>
             </li>
             <li>
-              <LogoutButton />
-              <LoginButton />
+              <AuthButton />
             </li>
           </ul>
         </div>
@@ -59,6 +57,7 @@ export function Navbar() {
       </div>
       <div className="navbar-end">
         <div className="hidden md:flex"></div>
+        <AuthButton />
         <ThemePicker />
       </div>
     </div>
