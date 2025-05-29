@@ -1,30 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useTotes } from "../hooks/useTotes";
 import { format } from "date-fns";
-import { Link } from "../components/Link";
+import { Link } from "@tanstack/react-router";
+import { getTotes, Tote } from "../database/queries";
 
 export const Route = createFileRoute("/totes")({
   component: RouteComponent,
-  loader: async () => {},
+  loader: async () => {
+    return await getTotes();
+  },
 });
 
 function RouteComponent() {
-  const { totes } = useTotes();
+  const totes: Tote[] | null = Route.useLoaderData();
   return (
     <ul className="list rounded-box bg-base-200 shadow-lg">
-      <li className="p-4 pb-2 text-xs tracking-wide opacity-60">Your totes</li>
-
+      <li className="flex justify-between items-center p-4">
+        <span className="text-xs tracking-wide opacity-60">Your totes</span>
+        <Link to="/totes/new" className="btn btn-primary btn-lg">
+          Add
+        </Link>
+      </li>
       {totes?.map((t) => (
         <li className="list-row">
-          {/* <div>
+          <div>
             <img
               className="size-10 rounded-box"
               src="https://img.daisyui.com/images/profile/demo/1@94.webp"
             />
-          </div> */}
+          </div>
           <div>
             <div className="text-xl">
-              <Link to="/totes/$toteId">{t.tote_name}</Link>
+              <Link to="/totes/$toteId" params={{ toteId: t.id }}>
+                {t.tote_name}
+              </Link>
             </div>
             <div className="pt-2 text-xs font-semibold uppercase opacity-40">
               Created {format(t.created_on, "PP")}

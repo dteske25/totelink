@@ -20,9 +20,9 @@ export const Route = createRootRouteWithContext<IRouterContext>()({
       navigate({ to: "/totes", replace: true });
     }
 
-    if (!session && pathname !== "/") {
-      navigate({ to: "/", replace: true });
-    }
+    // if (!session && pathname !== "/") {
+    //   navigate({ to: "/", replace: true });
+    // }
 
     return (
       <>

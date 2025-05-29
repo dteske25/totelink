@@ -14,7 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as TotesImport } from './routes/totes'
 import { Route as ScanImport } from './routes/scan'
 import { Route as IndexImport } from './routes/index'
+import { Route as TotesNewImport } from './routes/totes_.new'
 import { Route as TotesToteIdImport } from './routes/totes_.$toteId'
+import { Route as TotesToteIdEditImport } from './routes/totes_.$toteId_.edit'
 
 // Create/Update Routes
 
@@ -36,9 +38,21 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const TotesNewRoute = TotesNewImport.update({
+  id: '/totes_/new',
+  path: '/totes/new',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const TotesToteIdRoute = TotesToteIdImport.update({
   id: '/totes_/$toteId',
   path: '/totes/$toteId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TotesToteIdEditRoute = TotesToteIdEditImport.update({
+  id: '/totes_/$toteId_/edit',
+  path: '/totes/$toteId/edit',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,6 +88,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TotesToteIdImport
       parentRoute: typeof rootRoute
     }
+    '/totes_/new': {
+      id: '/totes_/new'
+      path: '/totes/new'
+      fullPath: '/totes/new'
+      preLoaderRoute: typeof TotesNewImport
+      parentRoute: typeof rootRoute
+    }
+    '/totes_/$toteId_/edit': {
+      id: '/totes_/$toteId_/edit'
+      path: '/totes/$toteId/edit'
+      fullPath: '/totes/$toteId/edit'
+      preLoaderRoute: typeof TotesToteIdEditImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +112,8 @@ export interface FileRoutesByFullPath {
   '/scan': typeof ScanRoute
   '/totes': typeof TotesRoute
   '/totes/$toteId': typeof TotesToteIdRoute
+  '/totes/new': typeof TotesNewRoute
+  '/totes/$toteId/edit': typeof TotesToteIdEditRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,6 +121,8 @@ export interface FileRoutesByTo {
   '/scan': typeof ScanRoute
   '/totes': typeof TotesRoute
   '/totes/$toteId': typeof TotesToteIdRoute
+  '/totes/new': typeof TotesNewRoute
+  '/totes/$toteId/edit': typeof TotesToteIdEditRoute
 }
 
 export interface FileRoutesById {
@@ -99,14 +131,35 @@ export interface FileRoutesById {
   '/scan': typeof ScanRoute
   '/totes': typeof TotesRoute
   '/totes_/$toteId': typeof TotesToteIdRoute
+  '/totes_/new': typeof TotesNewRoute
+  '/totes_/$toteId_/edit': typeof TotesToteIdEditRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/scan' | '/totes' | '/totes/$toteId'
+  fullPaths:
+    | '/'
+    | '/scan'
+    | '/totes'
+    | '/totes/$toteId'
+    | '/totes/new'
+    | '/totes/$toteId/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/scan' | '/totes' | '/totes/$toteId'
-  id: '__root__' | '/' | '/scan' | '/totes' | '/totes_/$toteId'
+  to:
+    | '/'
+    | '/scan'
+    | '/totes'
+    | '/totes/$toteId'
+    | '/totes/new'
+    | '/totes/$toteId/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/scan'
+    | '/totes'
+    | '/totes_/$toteId'
+    | '/totes_/new'
+    | '/totes_/$toteId_/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -115,6 +168,8 @@ export interface RootRouteChildren {
   ScanRoute: typeof ScanRoute
   TotesRoute: typeof TotesRoute
   TotesToteIdRoute: typeof TotesToteIdRoute
+  TotesNewRoute: typeof TotesNewRoute
+  TotesToteIdEditRoute: typeof TotesToteIdEditRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,6 +177,8 @@ const rootRouteChildren: RootRouteChildren = {
   ScanRoute: ScanRoute,
   TotesRoute: TotesRoute,
   TotesToteIdRoute: TotesToteIdRoute,
+  TotesNewRoute: TotesNewRoute,
+  TotesToteIdEditRoute: TotesToteIdEditRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +194,9 @@ export const routeTree = rootRoute
         "/",
         "/scan",
         "/totes",
-        "/totes_/$toteId"
+        "/totes_/$toteId",
+        "/totes_/new",
+        "/totes_/$toteId_/edit"
       ]
     },
     "/": {
@@ -151,6 +210,12 @@ export const routeTree = rootRoute
     },
     "/totes_/$toteId": {
       "filePath": "totes_.$toteId.tsx"
+    },
+    "/totes_/new": {
+      "filePath": "totes_.new.tsx"
+    },
+    "/totes_/$toteId_/edit": {
+      "filePath": "totes_.$toteId_.edit.tsx"
     }
   }
 }

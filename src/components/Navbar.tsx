@@ -1,7 +1,8 @@
 import { Package } from "lucide-react";
 import { ThemePicker } from "./ThemePicker";
-import { Link } from "./Link";
+import { Link } from "@tanstack/react-router";
 import AuthButton from "./AuthButton";
+import clsx from "clsx";
 
 export function Navbar() {
   return (
@@ -30,10 +31,14 @@ export function Navbar() {
             className="dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow"
           >
             <li>
-              <Link to="/totes">List</Link>
+              <Link to="/totes" className={clsx("btn", "btn-ghost")}>
+                List
+              </Link>
             </li>
             <li>
-              <Link to="/scan">Scan</Link>
+              <Link to="/scan" className={clsx("btn", "btn-ghost")}>
+                Scan
+              </Link>
             </li>
             <li>
               <AuthButton />
@@ -48,10 +53,14 @@ export function Navbar() {
       <div className="navbar-center hidden md:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link to="/totes">List</Link>
+            <Link to="/totes" className={clsx("btn", "btn-ghost")}>
+              List
+            </Link>
           </li>
           <li>
-            <Link to="/scan">Scan</Link>
+            <Link to="/scan" className={clsx("btn", "btn-ghost")}>
+              Scan
+            </Link>
           </li>
         </ul>
       </div>
