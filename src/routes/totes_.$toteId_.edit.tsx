@@ -21,7 +21,7 @@ function EditToteComponent() {
     setIsLoading(true);
     setError(null);
     try {
-      await updateTote(tote.id, data);
+      await updateTote(tote.id, { ...tote, ...data });
       navigate({ to: "/totes/$toteId", params: { toteId: tote.id } });
     } catch (err) {
       console.error("Failed to update tote:", err);
