@@ -12,3 +12,47 @@ export async function getTote(id: string) {
   const { data } = await supabase.from("totes").select().eq("id", id).single();
   return data;
 }
+
+export async function updateTote(id: string, updates: Partial<Tote>) {
+  const { data, error } = await supabase
+    .from("totes")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating tote:", error);
+    throw error;
+  }
+  return data;
+}
+
+export async function createTote(
+  newToteData: Omit<Tote, "id" | "created_on" | "updated_on" | "user_id">,
+) {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session?.user?.id) {
+    throw new Error("User not authenticated. Cannot create tote.");
+  }
+
+  const toteToInsert = {
+    ...newToteData,
+    user_id: session.user.id,
+  };
+
+  const { data, error } = await supabase
+    .from("totes")
+    .insert(toteToInsert)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating tote:", error);
+    throw error;
+  }
+  return data;
+}
