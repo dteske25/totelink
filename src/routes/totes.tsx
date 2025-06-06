@@ -76,7 +76,10 @@ function RouteComponent() {
             )}
           </>
         ) : (
-          <button onClick={handleAddClick} className="btn btn-soft">
+          <button
+            onClick={handleAddClick}
+            className="btn btn-soft btn-sm btn-primary"
+          >
             <Plus className="mr-2 size-6" />
             Add
           </button>
