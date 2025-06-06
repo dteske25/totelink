@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { Link } from "@tanstack/react-router";
-import { getTotes, Tote } from "../database/queries";
+import { getTotes, createTote, Tote } from "../database/queries";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/totes")({
   component: RouteComponent,
@@ -12,15 +12,75 @@ export const Route = createFileRoute("/totes")({
 });
 
 function RouteComponent() {
-  const totes: Tote[] | null = Route.useLoaderData();
+  const initialTotes: Tote[] | null = Route.useLoaderData();
+  const [totes, setTotes] = useState(initialTotes || []);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAddClick = () => {
+    setIsCreating(true);
+  };
+  const handleCreateTote = async (toteName: string) => {
+    if (!toteName.trim()) {
+      setIsCreating(false);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const newTote = await createTote({
+        tote_name: toteName.trim(),
+        tote_description: "",
+      });
+
+      if (newTote) {
+        setTotes([newTote, ...totes]);
+        setIsCreating(false);
+      }
+    } catch (error) {
+      console.error("Failed to create tote:", error);
+      setIsCreating(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancelCreate = () => {
+    setIsCreating(false);
+  };
   return (
     <ul className="list rounded-box bg-base-200 shadow-lg">
-      <li className="flex items-center justify-between p-4">
+      <li className="flex items-center p-4 pb-2">
         <span className="text-xs tracking-wide opacity-60">Your totes</span>
-        <Link to="/totes/new" className="btn btn-primary">
-          <Plus className="mr-2 size-6" />
-          Add
-        </Link>
+      </li>
+      <li className="flex items-center p-4">
+        {isCreating ? (
+          <>
+            <input
+              type="text"
+              placeholder="Enter tote name"
+              className="input flex-1 p-4 input-primary"
+              autoFocus
+              disabled={isLoading}
+              onBlur={(e) => handleCreateTote(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleCreateTote(e.currentTarget.value);
+                } else if (e.key === "Escape") {
+                  handleCancelCreate();
+                }
+              }}
+            />
+            {isLoading && (
+              <span className="loading loading-sm loading-spinner"></span>
+            )}
+          </>
+        ) : (
+          <button onClick={handleAddClick} className="btn btn-soft">
+            <Plus className="mr-2 size-6" />
+            Add
+          </button>
+        )}
       </li>
       {totes?.map((t) => (
         <Link key={t.id} to="/totes/$toteId" params={{ toteId: t.id }}>
