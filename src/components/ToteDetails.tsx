@@ -30,8 +30,8 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-4">
+    <div className="container mx-auto">
+      <div className="my-4">
         <Link to="/totes" className="btn mb-4 gap-2 btn-ghost btn-sm">
           <ArrowLeft className="size-4" />
           Back to Totes
