@@ -7,7 +7,8 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div>
-      <div className="hero min-h-screen">
+      {/* Adjust height to account for the navbar */}
+      <div className="hero min-h-[calc(100vh-4rem)]">
         <div className="hero-content text-center">
           <div className="max-w-sm">
             <h1 className="text-5xl font-bold">Totelink</h1>
