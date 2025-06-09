@@ -2,6 +2,12 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Images
+
+Uploaded tote images are stored in the `tote-images` storage bucket on Supabase.
+Images are organized under a user id folder and referenced in the `tote_images`
+table which links each image to a specific tote.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh

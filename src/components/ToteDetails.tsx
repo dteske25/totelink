@@ -4,6 +4,7 @@ import { InlineEdit } from "./InlineEdit";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ToteQRCode } from "./ToteQRCode";
+import { ToteImageGallery } from "./ToteImageGallery";
 
 interface ToteDetailsProps {
   tote?: Partial<Tote> | null;
@@ -64,11 +65,7 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
                 maxLength={500}
               />
 
-              {/* Placeholder for items within the tote if applicable */}
-              {/* <div className="mt-6">
-                <h2 className="text-2xl font-semibold">Items in this Tote</h2>
-                 You can map through tote.items or similar here if that data exists 
-              </div> */}
+              {tote.id && <ToteImageGallery toteId={tote.id} />}
             </div>
 
             {/* Sidebar - Right column (1/4 width on large screens) */}

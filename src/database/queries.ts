@@ -2,6 +2,7 @@ import { Database } from "./database.types";
 import supabase from "./supabase";
 
 export type Tote = Database["public"]["Tables"]["totes"]["Row"];
+export type ToteImage = Database["public"]["Tables"]["tote_images"]["Row"];
 
 export async function getTotes() {
   const { data } = await supabase
@@ -64,4 +65,61 @@ export async function createTote(newToteData: Partial<UpdateToteData>) {
     throw error;
   }
   return data;
+}
+
+export async function getToteImages(toteId: string) {
+  const { data, error } = await supabase
+    .from("tote_images")
+    .select()
+    .eq("tote_id", toteId)
+    .order("created_on", { ascending: true });
+  if (error) {
+    console.error("Error fetching tote images:", error);
+    throw error;
+  }
+  return data;
+}
+
+export async function uploadToteImages(toteId: string, files: File[]) {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session?.user?.id) {
+    throw new Error("User not authenticated. Cannot upload images.");
+  }
+
+  const uploaded: ToteImage[] = [];
+  for (const file of files) {
+    const filePath = `${session.user.id}/${toteId}/${crypto.randomUUID()}_${file.name}`;
+    const { error: uploadError } = await supabase
+      .storage
+      .from("tote-images")
+      .upload(filePath, file);
+    if (uploadError) {
+      console.error("Error uploading image:", uploadError);
+      throw uploadError;
+    }
+
+    const { data, error } = await supabase
+      .from("tote_images")
+      .insert({
+        tote_id: toteId,
+        user_id: session.user.id,
+        file_path: filePath,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error saving image record:", error);
+      throw error;
+    }
+
+    if (data) {
+      uploaded.push(data);
+    }
+  }
+
+  return uploaded;
 }
