@@ -18,15 +18,12 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
 
   const handleUpdateTitle = async (newTitle: string) => {
     if (!tote.id) return;
-    await onUpdateTote?.(tote.id, { ...tote, tote_name: newTitle });
+    await onUpdateTote?.(tote.id, { tote_name: newTitle });
   };
 
   const handleUpdateDescription = async (newDescription: string) => {
     if (!tote.id) return;
-    await onUpdateTote?.(tote.id, {
-      ...tote,
-      tote_description: newDescription,
-    });
+    await onUpdateTote?.(tote.id, { tote_description: newDescription });
   };
 
   return (
