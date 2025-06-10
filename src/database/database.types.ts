@@ -69,6 +69,7 @@ export type Database = {
       totes: {
         Row: {
           created_on: string;
+          icon: string | null;
           id: string;
           tote_description: string | null;
           tote_name: string | null;
@@ -77,6 +78,7 @@ export type Database = {
         };
         Insert: {
           created_on?: string;
+          icon?: string | null;
           id?: string;
           tote_description?: string | null;
           tote_name?: string | null;
@@ -85,6 +87,7 @@ export type Database = {
         };
         Update: {
           created_on?: string;
+          icon?: string | null;
           id?: string;
           tote_description?: string | null;
           tote_name?: string | null;

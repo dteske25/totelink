@@ -50,6 +50,7 @@ export async function createTote(newToteData: Partial<UpdateToteData>) {
 
   const toteToInsert = {
     ...newToteData,
+    icon: newToteData.icon ?? "Package",
     user_id: session.user.id,
   };
 
