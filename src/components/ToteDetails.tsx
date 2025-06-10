@@ -1,18 +1,26 @@
-import { Tote } from "../database/queries";
+import { Tote, ToteImage } from "../database/queries";
 import { formatDistanceToNow } from "date-fns";
 import { InlineEdit } from "./InlineEdit";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ToteQRCode } from "./ToteQRCode";
 import { IconPicker } from "./IconPicker";
+import { ToteImageGallery } from "./ToteImageGallery";
 
 interface ToteDetailsProps {
   tote?: Partial<Tote> | null;
   isLoading?: boolean;
   onUpdateTote?: (id: string, updates: Partial<Tote>) => Promise<void>;
+  images?: ToteImage[];
+  onImagesChange?: () => void;
 }
 
-export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
+export function ToteDetails({ 
+  tote, 
+  onUpdateTote, 
+  images = [], 
+  onImagesChange 
+}: ToteDetailsProps) {
   if (!tote) {
     return <div className="p-4 text-center text-error">Tote not found.</div>;
   }
@@ -99,10 +107,22 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
                   />
                 </div>
               )}
-            </div>
-          </div>
+            </div>          </div>
         </div>
       </div>
+
+      {/* Image Gallery Section */}
+      {tote.id && onImagesChange && (
+        <div className="card bg-base-200 shadow-xl mt-6">
+          <div className="card-body">
+            <ToteImageGallery
+              toteId={tote.id}
+              images={images}
+              onImagesChange={onImagesChange}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
