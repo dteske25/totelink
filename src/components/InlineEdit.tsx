@@ -97,6 +97,7 @@ export function InlineEdit({
     return (
       <div className={className}>
         <InputComponent
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref={inputRef as any}
           type={isMultiline ? undefined : "text"}
           value={editValue}

@@ -4,14 +4,14 @@ import { useState } from "react";
 import { ToteDetails } from "../components/ToteDetails";
 
 export const Route = createFileRoute("/totes_/$toteId")({
-  component: RouteComponent,
+  component: ToteDetailsRoute,
   loader: async ({ params }) => {
     const { toteId } = params;
     return await getTote(toteId);
   },
 });
 
-function RouteComponent() {
+function ToteDetailsRoute() {
   const initialTote: Tote | null = Route.useLoaderData();
   const router = useRouter();
   const [tote, setTote] = useState(initialTote);

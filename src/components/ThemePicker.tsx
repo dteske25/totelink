@@ -16,9 +16,7 @@ export function ThemePicker() {
   return (
     <div
       className="btn btn-ghost"
-      onClick={() => {
-        theme === "dark" ? setTheme("light") : setTheme("dark");
-      }}
+      onClick={() => (theme === "dark" ? setTheme("light") : setTheme("dark"))}
     >
       <Swap
         rotate

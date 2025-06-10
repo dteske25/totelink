@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: IndexRoute,
 });
 
-function Index() {
+function IndexRoute() {
   return (
     <div>
       <div className="hero h-75">

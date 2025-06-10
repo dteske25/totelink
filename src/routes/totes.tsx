@@ -5,13 +5,13 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/totes")({
-  component: RouteComponent,
+  component: TotesRoute,
   loader: async () => {
     return await getTotes();
   },
 });
 
-function RouteComponent() {
+function TotesRoute() {
   const initialTotes: Tote[] | null = Route.useLoaderData();
   const [totes, setTotes] = useState(initialTotes || []);
   const [isCreating, setIsCreating] = useState(false);
