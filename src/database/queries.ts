@@ -4,7 +4,10 @@ import supabase from "./supabase";
 export type Tote = Database["public"]["Tables"]["totes"]["Row"];
 
 export async function getTotes() {
-  const { data } = await supabase.from("totes").select();
+  const { data } = await supabase
+    .from("totes")
+    .select()
+    .order("updated_on", { ascending: false });
   return data;
 }
 
@@ -13,10 +16,18 @@ export async function getTote(id: string) {
   return data;
 }
 
-export async function updateTote(id: string, updates: Partial<Tote>) {
+export type UpdateToteData = Omit<
+  Tote,
+  "id" | "created_on" | "updated_on" | "user_id"
+>;
+
+export async function updateTote(
+  id: string,
+  updateToteData: Partial<UpdateToteData>,
+) {
   const { data, error } = await supabase
     .from("totes")
-    .update(updates)
+    .update({ ...updateToteData, updated_on: new Date().toISOString() })
     .eq("id", id)
     .select()
     .single();
@@ -28,9 +39,7 @@ export async function updateTote(id: string, updates: Partial<Tote>) {
   return data;
 }
 
-export async function createTote(
-  newToteData: Omit<Tote, "id" | "created_on" | "updated_on" | "user_id">,
-) {
+export async function createTote(newToteData: Partial<UpdateToteData>) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
