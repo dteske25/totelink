@@ -1,19 +1,31 @@
 import { useEffect, useState } from "react";
-import supabase from "../database/supabase";
-import { getToteImages, uploadToteImages, ToteImage } from "../database/queries";
+import {
+  getToteImages,
+  uploadToteImages,
+  getToteImageUrl,
+  ToteImage,
+} from "../database/queries";
 
 interface Props {
   toteId: string;
 }
 
 export function ToteImageGallery({ toteId }: Props) {
-  const [images, setImages] = useState<ToteImage[]>([]);
+  const [images, setImages] = useState<(ToteImage & { url: string })[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [zoomSrc, setZoomSrc] = useState<string | null>(null);
 
   useEffect(() => {
     getToteImages(toteId)
-      .then((imgs) => setImages(imgs || []))
+      .then(async (imgs) => {
+        const imgData = await Promise.all(
+          (imgs || []).map(async (img) => ({
+            ...img,
+            url: await getToteImageUrl(img.file_path),
+          })),
+        );
+        setImages(imgData);
+      })
       .catch((e) => console.error(e));
   }, [toteId]);
 
@@ -25,7 +37,13 @@ export function ToteImageGallery({ toteId }: Props) {
     setIsUploading(true);
     try {
       const uploaded = await uploadToteImages(toteId, files);
-      setImages((prev) => [...prev, ...uploaded]);
+      const uploadedWithUrls = await Promise.all(
+        uploaded.map(async (img) => ({
+          ...img,
+          url: await getToteImageUrl(img.file_path),
+        })),
+      );
+      setImages((prev) => [...prev, ...uploadedWithUrls]);
       e.target.value = "";
     } catch (error) {
       console.error(error);
@@ -34,9 +52,6 @@ export function ToteImageGallery({ toteId }: Props) {
     }
   };
 
-  const getUrl = (path: string) => {
-    return supabase.storage.from("tote-images").getPublicUrl(path).data.publicUrl;
-  };
 
   return (
     <div className="mt-6">
@@ -57,17 +72,14 @@ export function ToteImageGallery({ toteId }: Props) {
       </div>
       {images.length > 0 && (
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-          {images.map((img) => {
-            const url = getUrl(img.file_path);
-            return (
-              <img
-                key={img.id}
-                src={url}
-                onClick={() => setZoomSrc(url)}
-                className="aspect-square w-full cursor-pointer rounded-box object-cover"
-              />
-            );
-          })}
+          {images.map((img) => (
+            <img
+              key={img.id}
+              src={img.url}
+              onClick={() => setZoomSrc(img.url)}
+              className="aspect-square w-full cursor-pointer rounded-box object-cover"
+            />
+          ))}
         </div>
       )}
       {zoomSrc && (

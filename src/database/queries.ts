@@ -80,6 +80,17 @@ export async function getToteImages(toteId: string) {
   return data;
 }
 
+export async function getToteImageUrl(filePath: string, expiresIn = 60 * 60) {
+  const { data, error } = await supabase.storage
+    .from("tote-images")
+    .createSignedUrl(filePath, expiresIn);
+  if (error) {
+    console.error("Error generating image URL:", error);
+    throw error;
+  }
+  return data?.signedUrl || "";
+}
+
 export async function uploadToteImages(toteId: string, files: File[]) {
   const {
     data: { session },
