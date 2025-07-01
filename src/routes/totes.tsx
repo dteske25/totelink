@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { getTotes, createTote, Tote } from "../database/queries";
+import { getTotes, createTote, ITote } from "../database/queries";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { getIconComponent } from "../utils/iconUtils";
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/totes")({
 });
 
 function TotesRoute() {
-  const initialTotes: Tote[] | null = Route.useLoaderData();
+  const initialTotes: ITote[] | null = Route.useLoaderData();
   const [totes, setTotes] = useState(initialTotes || []);
   const [isCreating, setIsCreating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

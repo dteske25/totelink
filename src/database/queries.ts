@@ -1,8 +1,8 @@
 import { Database } from "./database.types";
 import supabase from "./supabase";
 
-export type Tote = Database["public"]["Tables"]["totes"]["Row"];
-export type ToteImage = Database["public"]["Tables"]["tote_images"]["Row"];
+export type ITote = Database["public"]["Tables"]["totes"]["Row"];
+export type IToteImage = Database["public"]["Tables"]["tote_images"]["Row"];
 
 export async function getTotes() {
   const { data } = await supabase
@@ -18,7 +18,7 @@ export async function getTote(id: string) {
 }
 
 export type UpdateToteData = Omit<
-  Tote,
+  ITote,
   "id" | "created_on" | "updated_on" | "user_id"
 >;
 
@@ -69,10 +69,7 @@ export async function createTote(newToteData: Partial<UpdateToteData>) {
 }
 
 // Image upload and management functions
-export async function uploadToteImage(
-  toteId: string,
-  file: File,
-): Promise<ToteImage> {
+export async function uploadToteImage(toteId: string, file: File) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -84,7 +81,7 @@ export async function uploadToteImage(
   // Create unique filename
   const fileExt = file.name.split(".").pop();
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
-  const filePath = `tote-images/${session.user.id}/${fileName}`;
+  const filePath = `${session.user.id}/${fileName}`;
 
   // Upload file to Supabase storage
   const { error: uploadError } = await supabase.storage
@@ -116,7 +113,7 @@ export async function uploadToteImage(
   return data;
 }
 
-export async function getToteImages(toteId: string): Promise<ToteImage[]> {
+export async function getToteImages(toteId: string) {
   const { data, error } = await supabase
     .from("tote_images")
     .select("*")
@@ -131,7 +128,7 @@ export async function getToteImages(toteId: string): Promise<ToteImage[]> {
   return data || [];
 }
 
-export async function deleteToteImage(imageId: string): Promise<void> {
+export async function deleteToteImage(imageId: string) {
   // First get the image record to get the file path
   const { data: imageRecord, error: fetchError } = await supabase
     .from("tote_images")
@@ -166,8 +163,10 @@ export async function deleteToteImage(imageId: string): Promise<void> {
   }
 }
 
-export function getToteImageUrl(filePath: string): string {
-  const { data } = supabase.storage.from("tote-images").getPublicUrl(filePath);
+export async function getToteImageUrl(filePath: string) {
+  const { data } = await supabase.storage
+    .from("tote-images")
+    .createSignedUrl(filePath, 120);
 
-  return data.publicUrl;
+  return data?.signedUrl;
 }

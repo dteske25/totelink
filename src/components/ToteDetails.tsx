@@ -1,26 +1,20 @@
-import { Tote, ToteImage } from "../database/queries";
+import { ITote, IToteImage } from "../database/queries";
 import { formatDistanceToNow } from "date-fns";
 import { InlineEdit } from "./InlineEdit";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ToteQRCode } from "./ToteQRCode";
 import { IconPicker } from "./IconPicker";
-import { ToteImageGallery } from "./ToteImageGallery";
 
 interface ToteDetailsProps {
-  tote?: Partial<Tote> | null;
+  tote?: Partial<ITote> | null;
   isLoading?: boolean;
-  onUpdateTote?: (id: string, updates: Partial<Tote>) => Promise<void>;
-  images?: ToteImage[];
+  onUpdateTote?: (id: string, updates: Partial<ITote>) => Promise<void>;
+  images?: IToteImage[];
   onImagesChange?: () => void;
 }
 
-export function ToteDetails({ 
-  tote, 
-  onUpdateTote, 
-  images = [], 
-  onImagesChange 
-}: ToteDetailsProps) {
+export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
   if (!tote) {
     return <div className="p-4 text-center text-error">Tote not found.</div>;
   }
@@ -81,7 +75,7 @@ export function ToteDetails({
                 <div className="flex flex-col gap-1 text-xs font-semibold uppercase opacity-40">
                   {tote.created_on && (
                     <div>
-                      <span className="font-medium">Created:</span>{" "}
+                      <span className="font-medium">Created:</span>
                       {formatDistanceToNow(new Date(tote.created_on), {
                         includeSeconds: true,
                         addSuffix: true,
@@ -90,7 +84,7 @@ export function ToteDetails({
                   )}
                   {tote.updated_on && (
                     <div>
-                      <span className="font-medium">Updated:</span>{" "}
+                      <span className="font-medium">Updated:</span>
                       {formatDistanceToNow(new Date(tote.updated_on), {
                         includeSeconds: true,
                         addSuffix: true,
@@ -107,22 +101,10 @@ export function ToteDetails({
                   />
                 </div>
               )}
-            </div>          </div>
-        </div>
-      </div>
-
-      {/* Image Gallery Section */}
-      {tote.id && onImagesChange && (
-        <div className="card bg-base-200 shadow-xl mt-6">
-          <div className="card-body">
-            <ToteImageGallery
-              toteId={tote.id}
-              images={images}
-              onImagesChange={onImagesChange}
-            />
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,12 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { getTote, updateTote, Tote, UpdateToteData, getToteImages, ToteImage } from "../database/queries";
+import {
+  getTote,
+  updateTote,
+  ITote,
+  UpdateToteData,
+  getToteImages,
+  IToteImage,
+} from "../database/queries";
 import { useState, useCallback, useEffect } from "react";
 import { ToteDetails } from "../components/ToteDetails";
 
@@ -12,15 +19,15 @@ export const Route = createFileRoute("/totes_/$toteId")({
 });
 
 function ToteDetailsRoute() {
-  const initialTote: Tote | null = Route.useLoaderData();
+  const initialTote: ITote | null = Route.useLoaderData();
   const router = useRouter();
   const [tote, setTote] = useState(initialTote);
-  const [images, setImages] = useState<ToteImage[]>([]);
+  const [images, setImages] = useState<IToteImage[]>([]);
 
   // Load images when component mounts or tote changes
   const loadImages = useCallback(async () => {
     if (!tote?.id) return;
-    
+
     try {
       const toteImages = await getToteImages(tote.id);
       setImages(toteImages);
@@ -52,8 +59,8 @@ function ToteDetailsRoute() {
     }
   };
   return (
-    <ToteDetails 
-      tote={tote} 
+    <ToteDetails
+      tote={tote}
       onUpdateTote={handleUpdateTote}
       images={images}
       onImagesChange={loadImages}
