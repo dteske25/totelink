@@ -1,10 +1,12 @@
-import { ITote, IToteImage } from "../database/queries";
+import { ITote, IToteImage, uploadToteImage, deleteToteImage, getToteImageUrl } from "../database/queries";
 import { formatDistanceToNow } from "date-fns";
 import { InlineEdit } from "./InlineEdit";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload, Trash2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ToteQRCode } from "./ToteQRCode";
 import { IconPicker } from "./IconPicker";
+import useAuth from "../hooks/useAuth";
+import { useState } from "react";
 
 interface ToteDetailsProps {
   tote?: Partial<ITote> | null;
@@ -14,18 +16,21 @@ interface ToteDetailsProps {
   onImagesChange?: () => void;
 }
 
-export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
+export function ToteDetails({ tote, onUpdateTote, images, onImagesChange }: ToteDetailsProps) {
+  const { user } = useAuth();
+  const [isUploading, setIsUploading] = useState(false);
+
   if (!tote) {
     return <div className="p-4 text-center text-error">Tote not found.</div>;
   }
   const handleUpdateTitle = async (newTitle: string) => {
     if (!tote.id) return;
-    await onUpdateTote?.(tote.id, { tote_name: newTitle });
+    await onUpdateTote?.(tote.id, { name: newTitle });
   };
 
   const handleUpdateDescription = async (newDescription: string) => {
     if (!tote.id) return;
-    await onUpdateTote?.(tote.id, { tote_description: newDescription });
+    await onUpdateTote?.(tote.id, { description: newDescription });
   };
   const handleUpdateIcon = async (iconName: string) => {
     if (!tote.id) return;
@@ -51,7 +56,7 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
                   onIconSelect={handleUpdateIcon}
                 />
                 <InlineEdit
-                  value={tote.tote_name || ""}
+                  value={tote.name || ""}
                   onSave={handleUpdateTitle}
                   placeholder="Enter tote name"
                   displayClassName="text-3xl font-bold"
@@ -60,7 +65,7 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
                 />
               </div>
               <InlineEdit
-                value={tote.tote_description || ""}
+                value={tote.description || ""}
                 onSave={handleUpdateDescription}
                 placeholder="Add a description"
                 isMultiline={true}
@@ -97,14 +102,78 @@ export function ToteDetails({ tote, onUpdateTote }: ToteDetailsProps) {
                 <div className="border-l-0 lg:border-l lg:border-base-300 lg:pl-4">
                   <ToteQRCode
                     toteId={tote.id}
-                    toteName={tote.tote_name || ""}
+                    toteName={tote.name || ""}
                   />
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Images Section */}
+          <div className="mt-8">
+            <h3 className="text-lg font-bold mb-4">Images</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {images?.map((image) => (
+                <div key={image.id} className="relative group aspect-square bg-base-300 rounded-lg overflow-hidden">
+                  <AsyncImage path={image.file_path} alt="Tote image" />
+                  <button
+                    onClick={async () => {
+                      if (confirm("Delete this image?")) {
+                        await deleteToteImage(image.id);
+                        onImagesChange?.();
+                      }
+                    }}
+                    className="absolute top-2 right-2 btn btn-circle btn-xs btn-error opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                </div>
+              ))}
+              <div className="aspect-square bg-base-300 rounded-lg flex items-center justify-center relative">
+                {isUploading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  <label className="cursor-pointer flex flex-col items-center gap-2 p-4 w-full h-full justify-center hover:bg-base-300/80 transition-colors">
+                    <Upload className="size-6 opacity-50" />
+                    <span className="text-xs opacity-50">Upload</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file && tote.id && user?.id) {
+                          setIsUploading(true);
+                          try {
+                            await uploadToteImage(tote.id, file, user.id);
+                            onImagesChange?.();
+                          } catch (err) {
+                            console.error(err);
+                            alert("Failed to upload image");
+                          } finally {
+                            setIsUploading(false);
+                          }
+                        }
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+function AsyncImage({ path, alt }: { path: string; alt: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+
+  useState(() => {
+    getToteImageUrl(path).then(setSrc);
+  });
+
+  if (!src) return <div className="w-full h-full animate-pulse bg-base-300" />;
+  return <img src={src} alt={alt} className="w-full h-full object-cover" />;
 }

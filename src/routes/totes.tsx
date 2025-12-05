@@ -4,6 +4,7 @@ import { getTotes, createTote, ITote } from "../database/queries";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { getIconComponent } from "../utils/iconUtils";
+import useAuth from "../hooks/useAuth";
 
 export const Route = createFileRoute("/totes")({
   component: TotesRoute,
@@ -17,6 +18,7 @@ function TotesRoute() {
   const [totes, setTotes] = useState(initialTotes || []);
   const [isCreating, setIsCreating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const handleAddClick = () => {
     setIsCreating(true);
@@ -31,9 +33,9 @@ function TotesRoute() {
     setIsLoading(true);
     try {
       const newTote = await createTote({
-        tote_name: toteName.trim(),
-        tote_description: "",
-      });
+        name: toteName.trim(),
+        description: "",
+      }, user?.id || "");
 
       if (newTote) {
         setTotes([newTote, ...totes]);
@@ -99,12 +101,12 @@ function TotesRoute() {
                 </div>
               </div>
               <div>
-                <div className="text-xl">{t.tote_name}</div>
+                <div className="text-xl">{t.name}</div>
                 <div className="pt-2 text-xs font-semibold uppercase opacity-40">
                   Created {format(t.created_on, "PP")}
                 </div>
               </div>
-              <p className="list-col-wrap text-xs">{t.tote_description}</p>
+              <p className="list-col-wrap text-xs">{t.description}</p>
             </li>
           </Link>
         );

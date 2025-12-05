@@ -1,7 +1,21 @@
 {
   "name": "totelink",
-  "compatibility_date": "2025-04-03",
+  "compatibility_date": "2025-12-02",
   "assets": {
     "not_found_handling": "single-page-application",
   },
+  "main": "./worker/index.ts",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "totelink-db",
+      "database_id": "e87c46fb-97fd-42ca-96f2-b39753168766",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "IMAGES",
+      "bucket_name": "totelink-images",
+    },
+  ],
 }

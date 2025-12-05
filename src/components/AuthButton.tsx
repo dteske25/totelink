@@ -1,27 +1,15 @@
-import supabase from "../database/supabase";
-import useAuth from "../hooks/useAuth";
-import Button from "./Button";
+import { SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 
 export default function AuthButton() {
-  const { session } = useAuth();
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
-        },
-      },
-    });
-  };
+  const { isSignedIn } = useUser();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-  };
-
-  if (session) {
-    return <Button onClick={handleLogout}>Logout</Button>;
+  if (isSignedIn) {
+    return <UserButton />;
   }
-  return <Button onClick={handleLogin}>Login</Button>;
+
+  return (
+    <SignInButton mode="modal">
+      <button className="btn btn-primary">Sign In</button>
+    </SignInButton>
+  );
 }
