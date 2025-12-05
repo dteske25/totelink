@@ -4,7 +4,7 @@ import { Navbar } from './Navbar';
 
 // Mock dependencies
 vi.mock('@tanstack/react-router', () => ({
-    Link: ({ to, children, className }: any) => <a href={to} className={className}>{children}</a>
+    Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => <a href={to} className={className}>{children}</a>
 }));
 
 vi.mock('./AuthButton', () => ({

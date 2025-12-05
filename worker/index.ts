@@ -19,7 +19,7 @@ app.get('/api/totes', async (c) => {
 
 app.post('/api/totes', async (c) => {
   try {
-    const body = await c.req.json() as any;
+    const body = await c.req.json() as { user_id?: string; name: string; description?: string; icon?: string };
     const { user_id, name, description, icon } = body;
 
     if (!user_id) {
@@ -38,8 +38,9 @@ app.post('/api/totes', async (c) => {
     ).bind(id).all();
 
     return c.json(results[0]);
-  } catch (err: any) {
-    return c.json({ error: err.message || "Unknown error" }, 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return c.json({ error: message }, 500);
   }
 });
 
@@ -47,13 +48,13 @@ app.post('/api/totes', async (c) => {
 
 app.patch('/api/totes/:id', async (c) => {
   const id = c.req.param('id');
-  const body = await c.req.json() as any;
+  const body = await c.req.json() as { name?: string; description?: string; icon?: string };
   const { name, description, icon } = body;
   const now = new Date().toISOString();
 
   // Dynamic update query
   const updates: string[] = [];
-  const values: any[] = [];
+  const values: (string | number | boolean | null)[] = [];
 
   if (name !== undefined) {
     updates.push("name = ?");

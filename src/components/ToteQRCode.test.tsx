@@ -18,7 +18,7 @@ describe('ToteQRCode', () => {
     });
 
     it('generates QR code when button is clicked', async () => {
-        (QRCode.toDataURL as any).mockResolvedValue('data:image/png;base64,mocked');
+        (QRCode.toDataURL as unknown as { mockResolvedValue: (val: unknown) => void }).mockResolvedValue('data:image/png;base64,mocked');
 
         render(<ToteQRCode toteId="123" toteName="Test Tote" />);
 
@@ -36,7 +36,7 @@ describe('ToteQRCode', () => {
 
     it('displays error if generation fails (console error)', async () => {
         const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
-        (QRCode.toDataURL as any).mockRejectedValue(new Error('Generation failed'));
+        (QRCode.toDataURL as unknown as { mockRejectedValue: (val: unknown) => void }).mockRejectedValue(new Error('Generation failed'));
 
         render(<ToteQRCode toteId="123" toteName="Test Tote" />);
         fireEvent.click(screen.getByText('Get QR Code'));
@@ -51,7 +51,7 @@ describe('ToteQRCode', () => {
     });
 
     it('allows closing the QR code view', async () => {
-        (QRCode.toDataURL as any).mockResolvedValue('data:image/png;base64,mocked');
+        (QRCode.toDataURL as unknown as { mockResolvedValue: (val: unknown) => void }).mockResolvedValue('data:image/png;base64,mocked');
         render(<ToteQRCode toteId="123" toteName="Test Tote" />);
 
         fireEvent.click(screen.getByText('Get QR Code'));
@@ -68,7 +68,7 @@ describe('ToteQRCode', () => {
     });
 
     it('triggers download when download button clicked', async () => {
-        (QRCode.toDataURL as any).mockResolvedValue('data:image/png;base64,mocked');
+        (QRCode.toDataURL as unknown as { mockResolvedValue: (val: unknown) => void }).mockResolvedValue('data:image/png;base64,mocked');
         render(<ToteQRCode toteId="123" toteName="Test Tote" />);
 
         fireEvent.click(screen.getByText('Get QR Code'));
@@ -80,9 +80,9 @@ describe('ToteQRCode', () => {
             download: '',
             href: '',
         };
-        const createElementSpy = vi.spyOn(document, 'createElement').mockReturnValue(linkMock as any);
-        const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation(() => ({}) as any);
-        const removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation(() => ({}) as any);
+        const createElementSpy = vi.spyOn(document, 'createElement').mockReturnValue(linkMock as unknown as HTMLElement);
+        const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation(() => ({}) as unknown as HTMLElement);
+        const removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation(() => ({}) as unknown as HTMLElement);
 
         fireEvent.click(screen.getByText('Download'));
 

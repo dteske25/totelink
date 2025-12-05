@@ -24,19 +24,23 @@ function ToteDetailsRoute() {
   const [tote, setTote] = useState(initialTote);
   const [images, setImages] = useState<IToteImage[]>([]);
 
+  const toteId = tote?.id;
+
   // Load images when component mounts or tote changes
   const loadImages = useCallback(async () => {
-    if (!tote?.id) return;
+    if (!toteId) return;
 
     try {
-      const toteImages = await getToteImages(tote.id);
+      const toteImages = await getToteImages(toteId);
       setImages(toteImages);
     } catch (error) {
       console.error("Error loading images:", error);
     }
-  }, [tote?.id]);
+  }, [toteId]);
+
   // Load images on mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadImages();
   }, [loadImages]);
 

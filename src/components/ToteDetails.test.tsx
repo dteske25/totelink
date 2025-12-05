@@ -17,7 +17,7 @@ vi.mock('../hooks/useAuth', () => ({
 }));
 
 vi.mock('@tanstack/react-router', () => ({
-    Link: ({ to, children, className }: any) => <a href={to} className={className}>{children}</a>
+    Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => <a href={to} className={className}>{children}</a>
 }));
 
 vi.mock('./ToteQRCode', () => ({
@@ -48,8 +48,8 @@ describe('ToteDetails', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        (useAuth as any).mockReturnValue({ user: mockUser });
-        (dbQueries.getToteImageUrl as any).mockResolvedValue('http://example.com/img1.jpg');
+        (useAuth as unknown as { mockReturnValue: (val: unknown) => void }).mockReturnValue({ user: mockUser });
+        (dbQueries.getToteImageUrl as unknown as { mockResolvedValue: (val: unknown) => void }).mockResolvedValue('http://example.com/img1.jpg');
     });
 
     it('renders tote not found message when tote is null', () => {
@@ -122,7 +122,7 @@ describe('ToteDetails', () => {
         const onImagesChange = vi.fn();
         // Mock confirm
         const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-        (dbQueries.deleteToteImage as any).mockResolvedValue(undefined);
+        (dbQueries.deleteToteImage as unknown as { mockResolvedValue: (val: unknown) => void }).mockResolvedValue(undefined);
 
         const { container } = render(<ToteDetails tote={mockTote} images={mockImages} onImagesChange={onImagesChange} />);
 

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from './index';
 
 describe('Worker API', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let mockEnv: any;
 
     beforeEach(() => {
@@ -53,7 +54,7 @@ describe('Worker API', () => {
             if (query.startsWith('UPDATE')) return { bind: bindUpdateSpy };
             if (query.startsWith('SELECT')) return { bind: bindSelectSpy };
             return {};
-        }) as any);
+        }) as unknown as typeof mockEnv.DB.prepare);
 
         const res = await app.request('/api/totes/1', {
             method: 'PATCH',
@@ -91,7 +92,7 @@ describe('Worker API', () => {
         mockEnv.DB.prepare.mockImplementation(((query: string) => {
             if (query.startsWith('INSERT')) return { bind: bindInsertSpy };
             return {};
-        }) as any);
+        }) as unknown as typeof mockEnv.DB.prepare);
 
         const res = await app.request(`/api/totes/${toteId}/images`, {
             method: 'POST',
@@ -99,7 +100,7 @@ describe('Worker API', () => {
         }, mockEnv);
 
         expect(res.status).toBe(200);
-        const body = await res.json() as any;
+        const body = await res.json() as { tote_id: string };
         expect(body.tote_id).toBe(toteId);
         expect(mockEnv.IMAGES.put).toHaveBeenCalled();
         expect(bindInsertSpy).toHaveBeenCalled();
@@ -116,7 +117,7 @@ describe('Worker API', () => {
             if (query.startsWith('INSERT')) return { bind: bindInsertSpy };
             if (query.startsWith('SELECT')) return { bind: bindSelectSpy };
             return {};
-        }) as any);
+        }) as unknown as typeof mockEnv.DB.prepare);
 
         const res = await app.request('/api/totes', {
             method: 'POST',
@@ -139,7 +140,7 @@ describe('Worker API', () => {
             if (query.startsWith('SELECT')) return { bind: bindSelectSpy };
             if (query.startsWith('DELETE')) return { bind: bindDeleteSpy };
             return {};
-        }) as any);
+        }) as unknown as typeof mockEnv.DB.prepare);
 
         const res = await app.request(`/api/images/${imageId}`, {
             method: 'DELETE',
