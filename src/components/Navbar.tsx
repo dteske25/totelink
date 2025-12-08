@@ -65,8 +65,9 @@ export function Navbar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <div className="hidden md:flex"></div>
-        <AuthButton />
+        <div className="hidden md:flex">
+          <AuthButton />
+        </div>
         <ThemePicker />
       </div>
     </div>
