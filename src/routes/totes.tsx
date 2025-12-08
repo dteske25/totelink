@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { getTotes, createTote, ITote } from "../database/queries";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { getIconComponent } from "../utils/iconUtils";
+import { getIconComponent } from "../utils/iconList";
 import useAuth from "../hooks/useAuth";
 
 export const Route = createFileRoute("/totes")({
@@ -32,10 +32,13 @@ function TotesRoute() {
 
     setIsLoading(true);
     try {
-      const newTote = await createTote({
-        name: toteName.trim(),
-        description: "",
-      }, user?.id || "");
+      const newTote = await createTote(
+        {
+          name: toteName.trim(),
+          description: "",
+        },
+        user?.id || "",
+      );
 
       if (newTote) {
         setTotes([newTote, ...totes]);
