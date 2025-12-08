@@ -4,7 +4,7 @@ export default function AuthButton() {
   const { isSignedIn } = useUser();
 
   if (isSignedIn) {
-    return <UserButton />;
+    return <UserButton showName />;
   }
 
   return (
