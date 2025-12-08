@@ -3,8 +3,8 @@ import { format } from "date-fns";
 import { getTotes, createTote, ITote } from "../database/queries";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { getIconComponent } from "../utils/iconList";
 import useAuth from "../hooks/useAuth";
+import { IconHelper } from "../components/IconPicker";
 
 export const Route = createFileRoute("/totes")({
   component: TotesRoute,
@@ -94,13 +94,12 @@ function TotesRoute() {
         )}
       </li>
       {totes?.map((t) => {
-        const IconComponent = getIconComponent(t.icon);
         return (
           <Link key={t.id} to="/totes/$toteId" params={{ toteId: t.id }}>
             <li className="list-row hover:bg-base-300">
               <div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-box bg-primary/10">
-                  <IconComponent className="size-6 text-primary" />
+                  <IconHelper name={t.icon} className="size-6 text-primary" />
                 </div>
               </div>
               <div>
