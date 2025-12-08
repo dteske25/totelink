@@ -1,21 +1,23 @@
-import { Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import { Outlet, useLocation, Navigate } from "@tanstack/react-router";
 import { Navbar } from "./Navbar";
 import useAuth from "../hooks/useAuth";
-import { useEffect } from "react";
+import { RedirectToSignIn } from "@clerk/clerk-react";
 
 export function Layout() {
-  const { session } = useAuth();
-  const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!session?.user && location.pathname !== "/") {
-      navigate({ to: "/" });
-    }
-    if (session?.user && location.pathname === "/") {
-      navigate({ to: "/totes" });
-    }
-  }, [session, navigate, location.pathname]);
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!isSignedIn && location.pathname !== "/") {
+    return <RedirectToSignIn />;
+  }
+
+  if (isSignedIn && location.pathname === "/") {
+    return <Navigate to="/totes" />;
+  }
 
   return (
     <div className="h-screen bg-base-100">

@@ -49,7 +49,7 @@ import {
   Wind,
   Hammer,
   Wrench,
-  LucideIcon,
+  LucideProps,
 } from "lucide-react";
 
 // Available icons for totes
@@ -111,7 +111,11 @@ export const AVAILABLE_ICONS = [
   { name: "Coffee", icon: Coffee },
 ];
 
-const ICON_MAP: Record<string, LucideIcon> = {
+export type IconComponent = React.ForwardRefExoticComponent<
+  Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+>;
+
+export const ICON_MAP: Record<string, IconComponent> = {
   // General/Storage
   Package,
   Box,
@@ -168,10 +172,3 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Utensils,
   Coffee,
 };
-
-export function getIconComponent(iconName: string | null): LucideIcon {
-  if (!iconName || !ICON_MAP[iconName]) {
-    return Package; // Default icon
-  }
-  return ICON_MAP[iconName];
-}

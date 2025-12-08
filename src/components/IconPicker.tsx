@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { AVAILABLE_ICONS, getIconComponent } from "../utils/iconUtils";
+import { AVAILABLE_ICONS, ICON_MAP } from "../utils/iconList";
 
 interface IntegratedIconPickerProps {
   selectedIcon?: string | null;
   onIconSelect: (iconName: string) => void;
   className?: string;
+}
+
+interface IIconHelperProps {
+  name?: keyof typeof ICON_MAP | null;
+  className: string;
+}
+
+export function IconHelper({ name, className }: IIconHelperProps) {
+  const Component = ICON_MAP[name ?? "Package"];
+  return <Component className={className} />;
 }
 
 export function IconPicker({
@@ -14,7 +24,6 @@ export function IconPicker({
   className,
 }: IntegratedIconPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const IconComponent = getIconComponent(selectedIcon ?? null);
 
   return (
     <div className={`relative ${className || ""}`}>
@@ -24,7 +33,7 @@ export function IconPicker({
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-primary/10 transition-colors group-hover:bg-primary/20">
-          <IconComponent className="size-14 text-primary" />
+          <IconHelper name={selectedIcon} className="size-14 text-primary" />
         </div>
 
         {/* Small caret in bottom-right corner */}

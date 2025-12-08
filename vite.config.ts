@@ -14,8 +14,25 @@ export default defineConfig({
     process.env.VITEST ? undefined : cloudflare(),
   ],
   test: {
-    environment: "jsdom",
     globals: true,
     setupFiles: ["./src/setupTests.ts"],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "api",
+          include: ["worker/**/*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "ui",
+          include: ["src/**/*.test.(ts|tsx)"],
+          environment: "jsdom",
+        },
+      },
+    ],
   },
 });
