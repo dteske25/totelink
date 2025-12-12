@@ -5,6 +5,9 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { IconHelper } from "../components/IconPicker";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/totes")({
   component: TotesRoute,
@@ -57,17 +60,17 @@ function TotesRoute() {
   };
 
   return (
-    <ul className="list rounded-box bg-base-200 shadow-lg">
+    <ul className="flex flex-col gap-2 rounded-lg border bg-card text-card-foreground shadow-sm">
       <li className="flex items-center p-4 pb-2">
-        <span className="text-xs tracking-wide opacity-60">Your totes</span>
+        <span className="text-xs tracking-wide text-muted-foreground/60">Your totes</span>
       </li>
       <li className="flex items-center p-4">
         {isCreating ? (
-          <>
-            <input
+          <div className="flex w-full items-center gap-2">
+            <Input
               type="text"
               placeholder="Enter tote name"
-              className="input flex-1 p-4 input-primary"
+              className="flex-1"
               autoFocus
               disabled={isLoading}
               onBlur={(e) => handleCreateTote(e.target.value)}
@@ -80,35 +83,37 @@ function TotesRoute() {
               }}
             />
             {isLoading && (
-              <span className="loading loading-sm loading-spinner"></span>
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
             )}
-          </>
+          </div>
         ) : (
-          <button
+          <Button
             onClick={handleAddClick}
-            className="btn btn-soft btn-sm btn-primary"
+            variant="default"
+            size="sm"
+            className="w-full sm:w-auto"
           >
-            <Plus className="mr-2 size-6" />
+            <Plus className="mr-2 size-4" />
             Add
-          </button>
+          </Button>
         )}
       </li>
       {totes?.map((t) => {
         return (
           <Link key={t.id} to="/totes/$toteId" params={{ toteId: t.id }}>
-            <li className="list-row hover:bg-base-300">
-              <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-box bg-primary/10">
-                  <IconHelper name={t.icon} className="size-6 text-primary" />
+            <li className="group flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10">
+                  <IconHelper name={t.icon} className="size-5 text-primary" />
+                </div>
+                <div>
+                  <div className="font-medium text-lg">{t.name}</div>
+                  <div className="text-xs text-muted-foreground uppercase">
+                     Created {format(t.created_on, "PP")}
+                  </div>
                 </div>
               </div>
-              <div>
-                <div className="text-xl">{t.name}</div>
-                <div className="pt-2 text-xs font-semibold uppercase opacity-40">
-                  Created {format(t.created_on, "PP")}
-                </div>
-              </div>
-              <p className="list-col-wrap text-xs">{t.description}</p>
+              <p className="text-sm text-muted-foreground truncate max-w-[200px]">{t.description}</p>
             </li>
           </Link>
         );
