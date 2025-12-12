@@ -1,8 +1,10 @@
 
+
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { useState } from "react";
 import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/scan")({
   component: ScanRoute,
@@ -60,12 +62,12 @@ function ScanRoute() {
     <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center space-y-4 p-4">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold">Scan Tote QR Code</h1>
-        <p className="text-base-content/70">
+        <p className="text-muted-foreground/70">
           Point your camera at a tote's QR code.
         </p>
       </div>
 
-      <div className="bg-base-200 relative aspect-square w-full max-w-sm overflow-hidden rounded-xl border-2 border-primary/20 shadow-lg">
+      <div className="bg-muted relative aspect-square w-full max-w-sm overflow-hidden rounded-xl border-2 border-primary/20 shadow-lg">
         <Scanner
           onScan={(result) => {
             if (result && result.length > 0) {
@@ -95,30 +97,32 @@ function ScanRoute() {
         />
         {error && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80 p-4 text-center text-white">
-            <div className="space-y-4">
-              <AlertCircle className="text-error mx-auto size-12" />
-              <p className="text-error font-medium">{error}</p>
-              <button
+            <div className="space-y-4 flex flex-col items-center">
+              <AlertCircle className="text-destructive mx-auto size-12" />
+              <p className="text-destructive font-medium">{error}</p>
+              <Button
                 onClick={() => {
                   setError(null);
                   setPaused(false);
                 }}
-                className="btn btn-ghost btn-sm text-white"
+                variant="ghost"
+                size="sm"
+                className="text-white hover:text-white hover:bg-white/20"
               >
                 Try Again
-              </button>
+              </Button>
             </div>
           </div>
         )}
       </div>
 
       <div className="flex justify-center">
-        <button
+        <Button
           onClick={() => navigate({ to: "/totes" })}
-          className="btn btn-ghost gap-2"
+          variant="ghost"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </div>
   );

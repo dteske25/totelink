@@ -1,6 +1,6 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Swap } from "./Swap";
+import { Button } from "@/components/ui/button";
 
 export function ThemePicker() {
   const preferredTheme = window?.matchMedia?.("(prefers-color-scheme:dark)")
@@ -10,20 +10,21 @@ export function ThemePicker() {
   const [theme, setTheme] = useState(preferredTheme);
 
   useEffect(() => {
-    document.querySelector("html")?.setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, [theme]);
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
   return (
-    <div
-      className="btn btn-ghost"
-      onClick={() => (theme === "dark" ? setTheme("light") : setTheme("dark"))}
-    >
-      <Swap
-        rotate
-        active={theme === "dark"}
-        activeState={<Sun />}
-        inactiveState={<Moon />}
-      />
-    </div>
+    <Button variant="ghost" size="icon" onClick={toggleTheme}>
+      {theme === "dark" ? <Sun /> : <Moon />}
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   );
 }

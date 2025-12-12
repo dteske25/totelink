@@ -1,4 +1,5 @@
 import { SignInButton, UserButton, useUser } from "@clerk/clerk-react";
+import { Button } from "@/components/ui/button";
 
 export default function AuthButton() {
   const { isSignedIn } = useUser();
@@ -9,7 +10,7 @@ export default function AuthButton() {
 
   return (
     <SignInButton mode="modal">
-      <button className="btn btn-primary">Sign In</button>
+      <Button>Sign In</Button>
     </SignInButton>
   );
 }

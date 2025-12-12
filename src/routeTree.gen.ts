@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TotesRouteImport } from './routes/totes'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScanRouteImport } from './routes/scan'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TotesToteIdRouteImport } from './routes/totes_.$toteId'
 
@@ -19,9 +22,24 @@ const TotesRoute = TotesRouteImport.update({
   path: '/totes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScanRoute = ScanRouteImport.update({
   id: '/scan',
   path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,34 +55,68 @@ const TotesToteIdRoute = TotesToteIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/totes': typeof TotesRoute
   '/totes/$toteId': typeof TotesToteIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/totes': typeof TotesRoute
   '/totes/$toteId': typeof TotesToteIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/totes': typeof TotesRoute
   '/totes_/$toteId': typeof TotesToteIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/scan' | '/totes' | '/totes/$toteId'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/scan'
+    | '/settings'
+    | '/signup'
+    | '/totes'
+    | '/totes/$toteId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/scan' | '/totes' | '/totes/$toteId'
-  id: '__root__' | '/' | '/scan' | '/totes' | '/totes_/$toteId'
+  to:
+    | '/'
+    | '/login'
+    | '/scan'
+    | '/settings'
+    | '/signup'
+    | '/totes'
+    | '/totes/$toteId'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/scan'
+    | '/settings'
+    | '/signup'
+    | '/totes'
+    | '/totes_/$toteId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   ScanRoute: typeof ScanRoute
+  SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   TotesRoute: typeof TotesRoute
   TotesToteIdRoute: typeof TotesToteIdRoute
 }
@@ -78,11 +130,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TotesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/scan': {
       id: '/scan'
       path: '/scan'
       fullPath: '/scan'
       preLoaderRoute: typeof ScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +177,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   ScanRoute: ScanRoute,
+  SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   TotesRoute: TotesRoute,
   TotesToteIdRoute: TotesToteIdRoute,
 }

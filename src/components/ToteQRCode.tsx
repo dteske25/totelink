@@ -1,6 +1,7 @@
 import { useState } from "react";
 import QRCode from "qrcode";
 import { Download, QrCode, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ToteQRCodeProps {
   toteId: string;
@@ -49,18 +50,20 @@ export function ToteQRCode({ toteId, toteName }: ToteQRCodeProps) {
   return (
     <div className="space-y-4">
       {!showQR ? (
-        <button
+        <Button
           onClick={generateQRCode}
           disabled={isGenerating}
-          className="btn w-full gap-2 btn-soft btn-sm"
+          variant="outline"
+          size="sm"
+          className="w-full"
         >
-          <QrCode className="size-4" />
+          <QrCode className="size-4 mr-2" />
           {isGenerating ? "Generating..." : "Get QR Code"}
-        </button>
+        </Button>
       ) : (
         <div className="space-y-4">
           <div className="flex justify-center">
-            <div className="inline-block rounded-lg border-2 border-base-300 bg-white p-3">
+            <div className="inline-block rounded-lg border-2 border-border bg-white p-3">
               <img
                 src={qrCodeUrl}
                 alt={`QR Code for ${toteName || `Tote ${toteId}`}`}
@@ -69,7 +72,7 @@ export function ToteQRCode({ toteId, toteName }: ToteQRCodeProps) {
             </div>
           </div>
 
-          <div className="text-center text-xs text-base-content/60">
+          <div className="text-center text-xs text-muted-foreground/60">
             <p>Scan to access this tote</p>
             <p className="mt-1 font-mono text-[10px] break-all opacity-60">
               {toteUrl}
@@ -77,19 +80,23 @@ export function ToteQRCode({ toteId, toteName }: ToteQRCodeProps) {
           </div>
 
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={downloadQRCode}
-              className="btn w-full flex-1 gap-2 btn-soft btn-sm btn-primary"
+              variant="default"
+              size="sm"
+              className="w-full flex-1"
             >
-              <Download className="size-4" />
+              <Download className="mr-2 size-4" />
               Download
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowQR(false)}
-              className="btn btn-ghost btn-sm"
+              variant="ghost"
+              size="sm"
+              className="px-2"
             >
               <X className="size-4" />
-            </button>
+            </Button>
           </div>
         </div>
       )}
