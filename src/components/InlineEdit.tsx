@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Edit } from "lucide-react";
+import { Edit, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface InlineEditProps {
   value: string;
@@ -92,7 +94,7 @@ export function InlineEdit({
     }
   };
   if (isEditing) {
-    const InputComponent = isMultiline ? "textarea" : "input";
+    const InputComponent = isMultiline ? Textarea : Input;
 
     return (
       <div className={className}>
@@ -105,23 +107,19 @@ export function InlineEdit({
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           maxLength={maxLength}
-          className={`w-full ${
-            isMultiline
-              ? "textarea-bordered textarea resize-none"
-              : "input-bordered input"
-          } ${editClassName}`}
+          className={`w-full ${editClassName}`}
           rows={isMultiline ? 3 : undefined}
           disabled={isLoading}
         />{" "}
         {isMultiline && (
-          <div className="mt-1 text-xs text-base-content/60">
+          <div className="mt-1 text-xs text-muted-foreground/60">
             Press Enter to add new lines, Ctrl+Enter or click outside to save,
             Esc to cancel
           </div>
         )}
         {isLoading && (
-          <div className="mt-1 flex items-center gap-2 text-sm text-base-content/60">
-            <span className="loading loading-xs loading-spinner"></span>
+          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground/60">
+            <Loader2 className="size-3 animate-spin" />
             Saving...
           </div>
         )}
@@ -135,12 +133,12 @@ export function InlineEdit({
       onClick={handleEdit}
     >
       <div
-        className={`${displayClassName} ${!value ? "text-base-content/50" : ""}`}
+        className={`${displayClassName} ${!value ? "text-muted-foreground/50" : ""}`}
       >
         {value || placeholder}
       </div>
       <div className="opacity-0 transition-opacity group-hover:opacity-100">
-        <Edit className="size-4 text-base-content/60" />
+        <Edit className="size-4 text-muted-foreground/60" />
       </div>
     </div>
   );
