@@ -158,25 +158,41 @@ function TotesRoute() {
         <div className={cn("grid gap-6", viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1")}>
             {filteredTotes.map((t) => (
                 <Link key={t.id} to="/totes/$toteId" params={{ toteId: t.id }} className="group">
-                    <Card className={cn("h-full transition-all hover:shadow-md hover:border-primary/50", viewMode === "list" && "flex flex-row items-center")}>
-                        <CardHeader className={cn("flex gap-4 space-y-0 p-4", viewMode === "list" ? "flex-row items-center flex-1" : "flex-col items-start")}>
-                              <div className={cn("relative overflow-hidden rounded-md bg-muted/20 transition-colors group-hover:bg-muted/40", viewMode === "grid" ? "h-32 w-full mb-2" : "h-16 w-16 shrink-0")}>
+                    <Card className={cn(
+                        "h-full transition-all hover:shadow-md hover:border-primary/50 overflow-hidden",
+                        viewMode === "list" ? "flex flex-row items-center" : "flex flex-col p-0 gap-0"
+                    )}>
+                        {viewMode === "grid" && (
+                            <div className="relative h-48 w-full bg-muted/20 transition-colors group-hover:bg-muted/40">
                                 {t.cover_image_path ? (
                                     <AsyncImage path={t.cover_image_path} alt={t.name || "Tote"} className="h-full w-full object-cover" />
                                 ) : (
                                     <div className="flex h-full w-full items-center justify-center text-muted-foreground/20">
-                                         <Package className={cn(viewMode === "grid" ? "h-12 w-12" : "h-8 w-8")} />
+                                         <Package className="h-16 w-16" />
                                     </div>
                                 )}
-                              </div>
+                            </div>
+                        )}
+                        <CardHeader className={cn("flex gap-4 space-y-0 p-4", viewMode === "list" ? "flex-row items-center flex-1" : "flex-col items-start")}>
+                              {viewMode === "list" && (
+                                  <div className="h-16 w-16 shrink-0 relative overflow-hidden rounded-md bg-muted/20 transition-colors group-hover:bg-muted/40">
+                                    {t.cover_image_path ? (
+                                        <AsyncImage path={t.cover_image_path} alt={t.name || "Tote"} className="h-full w-full object-cover" />
+                                    ) : (
+                                        <div className="flex h-full w-full items-center justify-center text-muted-foreground/20">
+                                             <Package className="h-8 w-8" />
+                                        </div>
+                                    )}
+                                  </div>
+                              )}
                              <div className="flex-1 space-y-1">
                                 <CardTitle className="text-base">{t.name}</CardTitle>
                                 {viewMode === "list" && <CardDescription className="line-clamp-1">{t.description}</CardDescription>}
                              </div>
                         </CardHeader>
-                        <CardContent className={cn("flex flex-col gap-2", viewMode === "list" ? "flex-none w-[200px] py-4 items-end" : "pt-0")}>
+                        <CardContent className={cn("flex flex-col gap-2 p-4 pt-0", viewMode === "list" ? "flex-none w-[200px] py-4 items-end" : "")}>
                             {viewMode === "grid" && <CardDescription className="line-clamp-2 min-h-[40px]">{t.description || "No description"}</CardDescription>}
-                            <div className="flex items-center gap-2 mt-auto">
+                            <div className="flex items-center gap-2 mt-auto w-full">
                                 {t.category && <Badge variant="secondary" className="text-xs">{t.category}</Badge>}
                                 <span className="text-xs text-muted-foreground ml-auto">
                                     {format(new Date(t.updated_on), "MMM d, yyyy")}

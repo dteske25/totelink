@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 import { ToteQRCode } from "./ToteQRCode";
 import { ToteItems } from "./ToteItems";
 import useAuth from "../hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -192,9 +192,15 @@ export function ToteDetails({ tote, onUpdateTote, images, onImagesChange }: Tote
 function AsyncImage({ path, alt }: { path: string; alt: string }) {
   const [src, setSrc] = useState<string | null>(null);
 
-  useState(() => {
-    getToteImageUrl(path).then(setSrc);
-  });
+  useEffect(() => {
+    let mounted = true;
+    getToteImageUrl(path).then((url) => {
+      if (mounted) setSrc(url);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [path]);
 
   if (!src) return <div className="w-full h-full animate-pulse bg-base-300" />;
   return <img src={src} alt={alt} className="w-full h-full object-cover" />;
